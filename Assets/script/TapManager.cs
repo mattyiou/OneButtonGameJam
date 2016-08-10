@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+// quite the redundant class now
 public class TapManager : MonoBehaviour {
 
     private int refreshRate;
@@ -33,6 +33,6 @@ public class TapManager : MonoBehaviour {
 
     private void SignalAvatar()
     {
-        avatar.RecieveTaps(tapCounter, refreshRate);
+        //avatar.RecieveTaps(tapCounter, refreshRate);
     }
 }
