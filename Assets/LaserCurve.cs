@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LaserCurve : MonoBehaviour {
+public class TestingLaserCurve : MonoBehaviour {
 
     private LineRenderer lineRenderer;
     private const float initRebound = 200;
