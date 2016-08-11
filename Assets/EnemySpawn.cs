@@ -22,7 +22,7 @@ public class EnemySpawn : MonoBehaviour {
 	}
 
 	void spawnLaserEnemies() {
-		int freeSpace = Random.Range (1, 6);
+		int freeSpace = Random.Range (1, 5);
 		for (int i=0; i<6; i++) {
 			if (i!=freeSpace) {
 				GameObject goTemporalLaserShip = (GameObject) Instantiate(laserShootingShip,laserShootingShip.transform.position,laserShootingShip.transform.rotation);

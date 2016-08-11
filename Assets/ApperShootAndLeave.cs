@@ -36,7 +36,7 @@ public class ApperShootAndLeave : MonoBehaviour {
 		float newPosition;
 		switch (phase) {
 		case PHASE_APPEAR:
-			newPosition = Mathf.SmoothDamp(this.transform.position.x,(place*2.5f)-7.5f,ref speed,timeToAppear);
+			newPosition = Mathf.SmoothDamp(this.transform.position.x,(place)-3.5f,ref speed,timeToAppear);
 			this.transform.position = new Vector3(newPosition,this.transform.position.y,this.transform.position.z);
 			if (currentTime > timeToAppear*8) {
 				phase = PHASE_SHOOT;
@@ -50,7 +50,7 @@ public class ApperShootAndLeave : MonoBehaviour {
 			}
 			break;
 		case PHASE_LEAVE:
-			newPosition = Mathf.SmoothDamp(this.transform.position.x,50,ref speed,timeToAppear);
+			newPosition = Mathf.SmoothDamp(this.transform.position.x,50,ref speed,timeToLeave);
 			this.transform.position = new Vector3(newPosition,this.transform.position.y,this.transform.position.z);
 			if (currentTime > timeToLeave*8) {
 				Destroy(this.gameObject);
