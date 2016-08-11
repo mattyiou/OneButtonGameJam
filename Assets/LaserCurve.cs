@@ -38,6 +38,6 @@ public class LaserCurve : MonoBehaviour {
                 reboundSpeed *= reboundModifier;
             }
         }
-        lineRenderer.SetPositions(positionArray);
+        //lineRenderer.SetPositions(positionArray);
 	}
 }
