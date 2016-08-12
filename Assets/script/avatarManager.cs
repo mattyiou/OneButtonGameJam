@@ -8,6 +8,7 @@ public class avatarManager : MonoBehaviour {
     private Vector2 velocity;
     private AttackState attackState;
     private DefenseState defenseState;
+    public float laserDamage = 10f;
 
 	// Use this for initialization
 	void Start () {
@@ -31,7 +32,9 @@ public class avatarManager : MonoBehaviour {
 
     public void Attack(Collider2D col)
     {
-        attackState.Attack(col);
+        //col.gameObject.GetComponent<EnemyHP>().LoseHP(laserDamage * Time.deltaTime);
+        // use this if w end up using more complex states
+        // attackState.Attack(col);
     }
 
     public void GetHit(int damage)

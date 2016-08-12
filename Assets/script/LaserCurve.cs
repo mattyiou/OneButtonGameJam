@@ -11,6 +11,7 @@ public class LaserCurve : MonoBehaviour {
     private int currentEndOfLaser;
     private int layerMask;
     private Vector3[] positionArray;
+    private avatarManager player;
 
 	// Use this for initialization
 	void Start () {
@@ -28,6 +29,7 @@ public class LaserCurve : MonoBehaviour {
             positionArray[i].y = headY + deltaY * i;
         }
         lineRenderer.SetVertexCount(vertexCount);
+        player = GetComponent<avatarManager>();
     }
 	
 	// Update is called once per frame
@@ -78,7 +80,7 @@ public class LaserCurve : MonoBehaviour {
                         (positionArray[j] - positionArray[j+1]).magnitude, layerMask);
                     if (hit.collider != null)
                     {
-                        // TODO: ADD HIT STUFF HERE
+                        player.Attack(hit.collider);
                         return j + 1;
                     }
                 }
