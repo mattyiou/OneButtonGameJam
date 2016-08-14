@@ -4,6 +4,8 @@ using System.Collections;
 public class EnemySpawn : MonoBehaviour {
 
 	public GameObject laserShootingShip;
+	public GameObject suiciderShip;
+	public GameObject formationShooterShip;
 	public float currentTime;
 	public float timePerEnemy = 5f;
 	// Use this for initialization
@@ -16,12 +18,31 @@ public class EnemySpawn : MonoBehaviour {
 		currentTime = currentTime + Time.fixedDeltaTime;
 		if (timePerEnemy < currentTime) {
 			currentTime = 0;
-			spawnLaserEnemies();
+			switch (Mathf.RoundToInt(Random.Range(0,2.98f)-.49f)) {
+			case 0: spawnShooters();
+				break;
+			case 1: spawnLaserEnemies();
+				break;
+			case 2: spawnSuiciders();
+				break;
+			}
+			//spawnLaserEnemies();
 		}
 
 	}
 
+	void spawnSuiciders() {
+		for (int i=0; i<4; i++) { 
+			Instantiate (suiciderShip, suiciderShip.transform.position, suiciderShip.transform.rotation);
+		}
+	}
+
+	void spawnShooters() {
+		Instantiate (formationShooterShip, formationShooterShip.transform.position, formationShooterShip.transform.rotation);
+	}
+
 	void spawnLaserEnemies() {
+
 		int freeSpace = Random.Range (1, 5);
 		for (int i=0; i<6; i++) {
 			if (i!=freeSpace) {
@@ -29,6 +50,7 @@ public class EnemySpawn : MonoBehaviour {
 				goTemporalLaserShip.GetComponent<ApperShootAndLeave>().place = i+1;
 			}
 		}
+
 
 	}
 }

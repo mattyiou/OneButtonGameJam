@@ -15,6 +15,7 @@ public class EnemySuicider : MonoBehaviour {
 	private float radius = 1f;
 	// Use this for initialization
 	void Start () {
+		transform.position = new Vector3 (Random.Range(-2.5f,2.5f),7,0);
 		if (enemyType == -1) {
 			enemyType = Random.Range (0,2);
 		}
@@ -52,6 +53,9 @@ public class EnemySuicider : MonoBehaviour {
 			center = new Vector3(center.x,center.y-.05f,center.z);
 			currentAngle += .1f;
 			break;
+		}
+		if (transform.position.y < -4) {
+			Destroy (this.gameObject);
 		}
 	}
 }
