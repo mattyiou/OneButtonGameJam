@@ -433,7 +433,6 @@ public class EnemyMinibossOne : MonoBehaviour {
         float smoothT = 0;
         Vector3 destination = new Vector3(Random.Range(bounds.x, bounds.x + bounds.width),
             Random.Range(bounds.y, bounds.y + bounds.height), 0f);
-        Debug.Log(destination);
         while (true)
         {
             if ((destination - this.transform.position).magnitude <= Time.deltaTime * speed)

@@ -80,7 +80,8 @@ public class LaserCurve : MonoBehaviour {
                         (positionArray[j] - positionArray[j+1]).magnitude, layerMask);
                     if (hit.collider != null)
                     {
-                        player.Attack(hit.collider);
+                        //player.Attack(hit.collider);
+                        hit.collider.SendMessage("OnTriggerEnter2D", GetComponent<BoxCollider2D>(), SendMessageOptions.DontRequireReceiver);
                         return j + 1;
                     }
                 }
