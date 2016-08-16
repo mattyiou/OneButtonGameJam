@@ -17,7 +17,7 @@ public class LaserCurve : MonoBehaviour {
 	void Start () {
         lineRenderer = GetComponent<LineRenderer>();
         reboundSpeed = initRebound;
-        reboundModifier = 0.97f;
+        reboundModifier = 0.98f;
         vertexCount = 100;
         currentEndOfLaser = vertexCount;
         layerMask = 1 << 8;
