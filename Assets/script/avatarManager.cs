@@ -9,11 +9,7 @@ public class avatarManager : MonoBehaviour {
     private float lastCurrentForce;
     private Rigidbody2D rb;
     private Vector2 velocity;
-    private AttackState attackState;
-    private DefenseState defenseState;
     public float laserDamage = 10f;
-    private bool isStopped = false;
-
     private int heldCount = 0;
 
     private enum TapState
@@ -32,10 +28,9 @@ public class avatarManager : MonoBehaviour {
         lastCurrentForce = currentForce;
         rb = this.GetComponent<Rigidbody2D>();
         velocity = rb.velocity;
-        attackState = AvatarStateManager.attackState;
-        defenseState = AvatarStateManager.defenseState;
-        defenseState = AvatarStateManager.shieldedState;
-        defenseState.EnterState(AvatarStateManager.MAX_HP);
+        AvatarStateManager.defenseState = AvatarStateManager.shieldedState;
+        AvatarStateManager.unshieldedState.InitializeHpSp(1, 0);
+        //defenseState.EnterState(AvatarStateManager.MAX_HP);
 	}
 	
 	void FixedUpdate () {
@@ -59,7 +54,6 @@ public class avatarManager : MonoBehaviour {
         }
         else if (Input.GetKeyUp(KeyCode.E))
         {
-            Debug.Log("KEY UP");
             if (tapState == TapState.HELD)
                 currentForce = lastCurrentForce;
             else if (tapState == TapState.HELD_LONGER)
@@ -74,7 +68,6 @@ public class avatarManager : MonoBehaviour {
             heldCount++;
             if (heldCount == FRAMES_TILL_HELD)
             {
-                Debug.Log("KEY HELD");
                 tapState = TapState.HELD;
                 currentForce = 0f;
             }
@@ -84,7 +77,6 @@ public class avatarManager : MonoBehaviour {
             heldCount++;
             if (heldCount == FRAMES_TILL_HELD_LONGER)
             {
-                Debug.Log("HELD LONGER");
                 tapState = TapState.HELD_LONGER;
             }
         }
@@ -102,12 +94,20 @@ public class avatarManager : MonoBehaviour {
 
     public void GetHit(int damage)
     {
-        defenseState.GetHit(damage);
+        AvatarStateManager.defenseState.GetHit(damage);
     }
 
     public void PickUp(int hp, int sp)
     {
-        defenseState.PickUp(hp, sp);
+        AvatarStateManager.defenseState.PickUp(hp, sp);
     }
 
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.name.StartsWith("PickUp"))
+        {
+            Item item = col.GetComponent<Item>();
+            PickUp(item.hp, item.sp);
+        }
+    }
 }

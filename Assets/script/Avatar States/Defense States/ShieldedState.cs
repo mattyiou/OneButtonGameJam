@@ -6,12 +6,12 @@ public class ShieldedState : DefenseState
 
     public override void GetHit(int damage)
     {
+        base.GetHit(damage);
         sp -= damage;
         if (sp <= 0)
         {
             sp = 0;
             AvatarStateManager.defenseState = AvatarStateManager.unshieldedState;
-            AvatarStateManager.defenseState.EnterState(hp);
         }
     }
 

@@ -2,5 +2,5 @@
 using System.Collections;
 
 public class DeadState : DefenseState {
-
+    
 }

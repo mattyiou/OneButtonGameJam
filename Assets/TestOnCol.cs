@@ -15,7 +15,6 @@ public class TestOnCol : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        Debug.Log("Collided");
     }
 
 }

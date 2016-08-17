@@ -34,10 +34,16 @@ public class EnemyMinibossOne : MonoBehaviour {
     private IEnumerator laserPinLeft;
     private IEnumerator laserPinRight;
 
+    private bool leftPinEnded = false;
+    private bool rightPinEnded = false;
+    private bool endLeftPin = false;
+    private bool endRightPin = false;
+
+    private int playerMask = 1 << 9;
+
 	// Use this for initialization
 	void Start () {     
         randomMovement = RandomMovement();
-        StartCoroutine(randomMovement);
         attackState = ATTACK_STATES.INACTIVE;
         laserPinRight = PinRightLaser();
         laserPinLeft = PinLeftLaser();
@@ -72,8 +78,8 @@ public class EnemyMinibossOne : MonoBehaviour {
 
     IEnumerator Brain()
     {
+        StartCoroutine(randomMovement);
         int i;
-        int j;
         while (true)
         {
             i = Random.Range(1, 7);
@@ -82,8 +88,14 @@ public class EnemyMinibossOne : MonoBehaviour {
                 StartCoroutine(laserPinLeft);
                 StartCoroutine(laserPinRight);
                 yield return new WaitForSeconds(Random.Range(10, 15));
-                StopCoroutine(laserPinLeft);
-                StopCoroutine(laserPinRight);
+                endLeftPin = true;
+                endRightPin = true;
+                while (true)
+                {
+                    if (leftPinEnded && rightPinEnded)
+                        break;
+                    yield return new WaitForEndOfFrame();
+                }
             }
             else
             {
@@ -149,6 +161,8 @@ public class EnemyMinibossOne : MonoBehaviour {
                     startWidth = curLength / 10;
                     laserOne.SetWidth(startWidth, startWidth);
                     laserTwo.SetWidth(startWidth, startWidth);
+                    if (!BigLaserRaycast(originOne, laserOneEnd, startWidth, startWidth))
+                        BigLaserRaycast(originTwo, laserTwoEnd, startWidth, startWidth);
                 }
                 curTime += Time.deltaTime;
             }
@@ -162,6 +176,8 @@ public class EnemyMinibossOne : MonoBehaviour {
             endWidth = curLength / 10;
             laserOne.SetWidth(startWidth, endWidth);
             laserTwo.SetWidth(startWidth, endWidth);
+            if (!BigLaserRaycast(originOne, laserOneEnd, startWidth, endWidth))
+                BigLaserRaycast(originTwo, laserTwoEnd, startWidth, endWidth);
             curTime += Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
@@ -213,6 +229,7 @@ public class EnemyMinibossOne : MonoBehaviour {
         {
             laserTwoEnd.y -= Time.deltaTime * verticalSpeed;
             laserTwo.SetPosition(1, laserTwoEnd);
+            RaycastLaser(originTwo, laserTwoEnd);
             yield return new WaitForEndOfFrame();
         }
 
@@ -220,6 +237,7 @@ public class EnemyMinibossOne : MonoBehaviour {
         {
             laserTwoEnd.x += Time.deltaTime * laserSpeed;
             laserTwo.SetPosition(1, laserTwoEnd);
+            RaycastLaser(originTwo, laserTwoEnd);
             yield return new WaitForEndOfFrame();
         }
 
@@ -237,6 +255,7 @@ public class EnemyMinibossOne : MonoBehaviour {
         {
             laserOneEnd.y -= Time.deltaTime * verticalSpeed;
             laserOne.SetPosition(1, laserOneEnd);
+            RaycastLaser(originOne, laserOneEnd);
             yield return new WaitForEndOfFrame();
         }
 
@@ -244,6 +263,7 @@ public class EnemyMinibossOne : MonoBehaviour {
         {
             laserOneEnd.x -= Time.deltaTime * laserSpeed;
             laserOne.SetPosition(1, laserOneEnd);
+            RaycastLaser(originOne, laserOneEnd);
             yield return new WaitForEndOfFrame();
         }
 
@@ -278,6 +298,7 @@ public class EnemyMinibossOne : MonoBehaviour {
         {
             laserTwoEnd.y -= Time.deltaTime * verticalSpeed;
             laserTwo.SetPosition(1, laserTwoEnd);
+            RaycastLaser(originTwo, laserTwoEnd);
             yield return new WaitForEndOfFrame();
         }
 
@@ -285,6 +306,7 @@ public class EnemyMinibossOne : MonoBehaviour {
         {
             laserTwoEnd.x -= Time.deltaTime * laserSpeed;
             laserTwo.SetPosition(1, laserTwoEnd);
+            RaycastLaser(originTwo, laserTwoEnd);
             yield return new WaitForEndOfFrame();
         }
 
@@ -302,6 +324,7 @@ public class EnemyMinibossOne : MonoBehaviour {
         {
             laserOneEnd.y -= Time.deltaTime * verticalSpeed;
             laserOne.SetPosition(1, laserOneEnd);
+            RaycastLaser(originOne, laserOneEnd);
             yield return new WaitForEndOfFrame();
         }
 
@@ -309,6 +332,7 @@ public class EnemyMinibossOne : MonoBehaviour {
         {
             laserOneEnd.x += Time.deltaTime * laserSpeed;
             laserOne.SetPosition(1, laserOneEnd);
+            RaycastLaser(originOne, laserOneEnd);
             yield return new WaitForEndOfFrame();
         }
 
@@ -330,9 +354,12 @@ public class EnemyMinibossOne : MonoBehaviour {
         Vector3 pin = Vector3.zero;
         pin.y = -5.1f;
         float rangeLow = -2.5f;
-        float rangeHigh = 2.5f;  
+        float rangeHigh = 2.5f;
 
-        while (true)
+        endLeftPin = false;
+        leftPinEnded = false;
+
+        while (!endLeftPin)
         {
             laserOneEnd = originOne;
             float startWidthOne = 0.13f;
@@ -349,6 +376,7 @@ public class EnemyMinibossOne : MonoBehaviour {
                 laserOneEnd += (pin - laserOneEnd).normalized * Time.deltaTime * 5f;
                 laserOne.SetPosition(0, originOne);
                 laserOne.SetPosition(1, laserOneEnd);
+                RaycastLaser(originOne, laserOneEnd);
                 yield return new WaitForEndOfFrame();
             }
             laserOneEnd = pin;
@@ -359,6 +387,7 @@ public class EnemyMinibossOne : MonoBehaviour {
                 waitTime -= Time.deltaTime;
                 laserOne.SetPosition(0, originOne);
                 laserOne.SetPosition(1, laserOneEnd);
+                RaycastLaser(originOne, laserOneEnd);
                 yield return new WaitForEndOfFrame();
             }
             // release laser
@@ -373,6 +402,7 @@ public class EnemyMinibossOne : MonoBehaviour {
                 yield return new WaitForEndOfFrame();
             }
         }
+        leftPinEnded = true;
     }
 
     IEnumerator PinRightLaser()
@@ -382,9 +412,10 @@ public class EnemyMinibossOne : MonoBehaviour {
         float rangeLow = -2.5f;
         float rangeHigh = 2.5f;
         laserTwoEnd = originTwo;
-        
 
-        while (true)
+        endRightPin = false;
+        rightPinEnded = false;
+        while (!endRightPin)
         {
             laserTwoEnd = originTwo;
             float startWidthTwo = 0.13f;
@@ -401,6 +432,7 @@ public class EnemyMinibossOne : MonoBehaviour {
                 laserTwoEnd += (pin - laserTwoEnd).normalized * Time.deltaTime * 5f;
                 laserTwo.SetPosition(0, originTwo);
                 laserTwo.SetPosition(1, laserTwoEnd);
+                RaycastLaser(originTwo, laserTwoEnd);
                 yield return new WaitForEndOfFrame();
             }
             laserTwoEnd = pin;
@@ -411,6 +443,7 @@ public class EnemyMinibossOne : MonoBehaviour {
                 waitTime -= Time.deltaTime;
                 laserTwo.SetPosition(0, originTwo);
                 laserTwo.SetPosition(1, laserTwoEnd);
+                RaycastLaser(originTwo, laserTwoEnd);
                 yield return new WaitForEndOfFrame();
             }
             // release laser
@@ -425,6 +458,7 @@ public class EnemyMinibossOne : MonoBehaviour {
                 yield return new WaitForEndOfFrame();
             }
         }
+        rightPinEnded = true;
     }
 
     IEnumerator RandomMovement()
@@ -447,6 +481,44 @@ public class EnemyMinibossOne : MonoBehaviour {
         }
     }
 
+    void RaycastLaser(Vector3 start, Vector3 end)
+    {
+        RaycastHit2D hit;
+        hit = Physics2D.Raycast(start, (end - start), (end- start).magnitude, playerMask);
+        if (hit.collider != null)
+        {
+            // do something with collider
+            // call something like "GetHit(damage)"
+            hit.collider.GetComponent<avatarManager>().GetHit(1);
+        }
+    }
+    // cause your a special snowflake, >__>
+    bool BigLaserRaycast(Vector3 start, Vector3 end, float sW, float eW)
+    {
+        float spacingTop = sW / .1f;
+        float spacingBot = eW / .1f;
+        float topOffset = sW / 2;
+        float botOffset = eW / 2;
+        Vector3 top = start;
+        Vector3 bot = end;
+        top.x -= topOffset;
+        bot.x -= botOffset;
+
+        RaycastHit2D hit;
+
+        for (int i = 0; i < spacingBot; i++)
+        {
+            hit = Physics2D.Raycast(top, (bot - top), (bot - top).magnitude, playerMask);
+            if (hit.collider != null)
+            {
+                hit.collider.GetComponent<avatarManager>().GetHit(2);
+                return true;
+            }
+            top.x += spacingTop;
+            bot.x += spacingBot;
+        }
+        return false;
+    }
     //Vector3 SmoothStepV3(Vector3 from, Vector3 to, float spd)
     //{
     //    Vector3 dir = (to - from).normalized;
