@@ -17,9 +17,9 @@ public class EnemySuicider : MonoBehaviour {
 	void Start () {
 		transform.position = new Vector3 (Random.Range(-2.5f,2.5f),7,0);
 		if (enemyType == -1) {
-			enemyType = Random.Range (0,2);
+			enemyType = Mathf.RoundToInt( Random.Range (0,2));
 		}
-		enemyType = ENEMY_ZIGZAG;
+		//enemyType = ENEMY_ZIGZAG;
 		switch (enemyType) {
 		case ENEMY_SUICIDER:
 			Vector3 target = GameObject.FindGameObjectWithTag("Player").transform.position;
@@ -54,7 +54,7 @@ public class EnemySuicider : MonoBehaviour {
 			currentAngle += .1f;
 			break;
 		}
-		if (transform.position.y < -4) {
+		if (transform.position.y < -7) {
 			Destroy (this.gameObject);
 		}
 	}
