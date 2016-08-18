@@ -20,6 +20,11 @@ public class EnemyFormationShooters : MonoBehaviour {
 
 		Invoke ("removeSelf", 3f);
 
+		StartCoroutine (spawnShooters());
+
+	}
+
+	IEnumerator spawnShooters() {
 		if (speed == 0) {
 			speed = .1f;
 		}
@@ -40,19 +45,27 @@ public class EnemyFormationShooters : MonoBehaviour {
 		startingPoint.x = 128 * -movementSpeed.x;
 		//startingPoint.y = 128 * -movementSpeed.y;
 
-		float tempFrequency = Random.Range (.05f, .09f);
+		//float tempFrequency = Random.Range (.05f, .09f);
+		float amplitude = Random.Range (1f, 1.5f);
+		float tempFrequency = amplitude / 20;//Random.Range (.05f, .09f);
+		float startingAngle = 0;
 		for (int i=0; i<shooterAmount;i++) {
 			lShooters.Add((GameObject) Instantiate(baseEnemyShooter,baseEnemyShooter.transform.position,baseEnemyShooter.transform.rotation));
 			lShooters[i].GetComponent<EnemyShooter>().speed = movementSpeed;
 			lShooters[i].GetComponent<EnemyShooter>().frequency = tempFrequency;
-			lShooters[i].transform.position = startingPoint - new Vector3(i*1.7f,0,0);
+			lShooters[i].GetComponent<EnemyShooter>().amplitude = amplitude;
+			startingAngle = 3.14f/2f * ((float)i/(float)shooterAmount);
+			//lShooters[i].GetComponent<EnemyShooter>().startingAngle = startingAngle;
+			lShooters[i].transform.position = startingPoint - new Vector3(0,0,0);
 			//yield return new WaitForSeconds(.1f);
+			yield return new WaitForSeconds(.3f);
 
 		}
 
-
 	}
-	
+
+
+
 	// Update is called once per frame
 	void Update () {
 	

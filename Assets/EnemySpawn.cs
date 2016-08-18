@@ -18,7 +18,8 @@ public class EnemySpawn : MonoBehaviour {
 		currentTime = currentTime + Time.fixedDeltaTime;
 		if (timePerEnemy < currentTime) {
 			currentTime = 0;
-			switch (Mathf.RoundToInt(Random.Range(0,2.98f)-.49f)) {
+			int whatToSpawn = Mathf.RoundToInt (Random.Range (0, 2.98f) - .49f);
+			switch (0) {
 			case 0: spawnShooters();
 				break;
 			case 1: spawnLaserEnemies();
