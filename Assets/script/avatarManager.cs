@@ -29,7 +29,7 @@ public class avatarManager : MonoBehaviour {
         rb = this.GetComponent<Rigidbody2D>();
         velocity = rb.velocity;
         AvatarStateManager.defenseState = AvatarStateManager.shieldedState;
-        AvatarStateManager.unshieldedState.InitializeHpSp(1, 0);
+        AvatarStateManager.unshieldedState.InitializeHpSp(4, 2);
         //defenseState.EnterState(AvatarStateManager.MAX_HP);
 	}
 	
