@@ -13,12 +13,17 @@ public class EnemyShooter : MonoBehaviour {
 	public float startingAngle = 0f;
 	private float middleYPosition = 0;
 	private bool doingIntro = true;
-	// Use this for initialization
+	public int formationType = 0;
+
+	public const int FORMATION_DIVE_DOWNWARDS = 0;
+	public const int FORMATION_ZIGZAG_MIDDLE = 1;
+	public const int FORMATION_SPIRAL= 2;
 
 	void removeSelf() {
 		Destroy (this.gameObject);
 	}
 
+	// Use this for initialization
 	void Start () {
 		middleYPosition = transform.position.y;
 		Invoke ("removeSelf", 9f);
@@ -28,20 +33,38 @@ public class EnemyShooter : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () {
 		angle += frequency;
-		transform.position = new Vector3 (transform.position.x, middleYPosition + amplitude * Mathf.Sin (angle), transform.position.z);
-		currentTime += Time.fixedDeltaTime;
-		transform.position += speed;
-		if (doingIntro) {
-			if ((transform.position.x < -5 && speed.x <0) || (transform.position.x > 5 && speed.x >0)) {
-				doingIntro = false;
-				speed = -speed;
+
+		Vector3 newPosition = Vector3.zero;
+		switch (formationType) {
+		case FORMATION_ZIGZAG_MIDDLE: 
+			newPosition = new Vector3 (transform.position.x, middleYPosition + amplitude * Mathf.Sin (angle), transform.position.z);
+			if (doingIntro) {
+				if ((transform.position.x < -7 && speed.x <0) || (transform.position.x > 7 && speed.x >0)) {
+					doingIntro = false;
+					speed = -speed;
+				}
+			} else {
+				if (currentTime > timerPerShoot+Random.Range(0,.6f)) {
+					currentTime = 0;
+					Instantiate (bullet, transform.position, bullet.transform.rotation);
+				}
 			}
-		} else {
-			if (currentTime > timerPerShoot+Random.Range(0,.5f)) {
+			break;
+		case FORMATION_DIVE_DOWNWARDS:
+			newPosition = new Vector3 (amplitude * Mathf.Sin (angle), transform.position.y , transform.position.z);
+			if (currentTime > timerPerShoot+Random.Range(0,.6f)) {
 				currentTime = 0;
 				Instantiate (bullet, transform.position, bullet.transform.rotation);
 			}
+			break;
+
 		}
+
+		transform.position = newPosition;
+		transform.position += speed;
+
+		currentTime += Time.fixedDeltaTime;
+
 
 	}
 }
