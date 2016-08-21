@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EnemyShooter : MonoBehaviour {
+public class EnemyShooter : Enemy {
 
 	public GameObject bullet;
 	public float timerPerShoot = 1f;
@@ -19,9 +19,22 @@ public class EnemyShooter : MonoBehaviour {
 	public const int FORMATION_ZIGZAG_MIDDLE = 1;
 	public const int FORMATION_SPIRAL= 2;
 
+	//public GameObject explosionParticle;
+
 	void removeSelf() {
 		Destroy (this.gameObject);
 	}
+
+	/*void OnTriggerEnter2D(Collider2D col) {
+		if (col.Equals (null)) {
+
+		} else if (col.tag.Equals ("Player")) {
+			GameObject.FindGameObjectWithTag ("Player").GetComponent<avatarManager> ().GetHit (5);
+		}
+		Instantiate (explosionParticle, transform.position, explosionParticle.transform.rotation);
+		Destroy (this.gameObject);
+
+	}*/
 
 	// Use this for initialization
 	void Start () {

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ApperShootAndLeave : MonoBehaviour {
+public class ApperShootAndLeave : Enemy {
 
 	const int PHASE_APPEAR=0;
 	const int PHASE_SHOOT=1;

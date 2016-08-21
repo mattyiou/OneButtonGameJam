@@ -10,7 +10,7 @@ public class EnemySpawn : MonoBehaviour {
 	public float timePerEnemy = 5f;
 	// Use this for initialization
 	void Start () {
-		spawnSuiciders ();
+		spawnShooters ();
 	}
 
 	public void restartGame() {

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EnemySuicider : MonoBehaviour {
+public class EnemySuicider : Enemy {
 
 	const int ENEMY_SUICIDER = 0;
 	const int ENEMY_ZIGZAG = 1;
@@ -14,14 +14,6 @@ public class EnemySuicider : MonoBehaviour {
 	private float currentAngle = 0;
 	private float radius = 1f;
 
-	public GameObject explosionParticle;
-
-	void OnCollisionEnter2D(Collision2D col) {
-		col.collider.GetComponent<avatarManager>().GetHit(5);
-		Instantiate (explosionParticle, transform.position, explosionParticle.transform.rotation);
-		Destroy (this.gameObject);
-
-	}
 
 	// Use this for initialization
 	void Start () {
