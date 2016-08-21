@@ -65,13 +65,13 @@ public class ApperShootAndLeave : MonoBehaviour {
 
     IEnumerator FireLaser()
     {
-        float finalWidth = 0.9f;
+        float finalWidth = 0.45f;
         float curWidth = 0.1f;
         float startWidth = 0.1f;
         float widthSpeed = 1f;
         float finalLength = 10f;
         float curLength = 0f;
-        float lengthSpeed = 5f;
+        float lengthSpeed = 8;
 
         Vector3 origin = this.transform.position;
         Vector3 end = this.transform.position;

@@ -10,6 +10,11 @@ public class Bullet : MonoBehaviour {
 		Destroy (this.gameObject);
 	}
 
+	void OnCollisionEnter(Collision col) {
+		col.collider.GetComponent<avatarManager>().GetHit(2);
+		Destroy (this.gameObject);
+	}
+
 	// Use this for initialization
 	void Start () {
 		Instantiate (pewEffect, transform.position, transform.rotation);

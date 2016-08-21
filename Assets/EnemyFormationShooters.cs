@@ -54,7 +54,7 @@ public class EnemyFormationShooters : MonoBehaviour {
 			lShooters[i].GetComponent<EnemyShooter>().speed = movementSpeed;
 			lShooters[i].GetComponent<EnemyShooter>().frequency = tempFrequency;
 			lShooters[i].GetComponent<EnemyShooter>().amplitude = amplitude;
-			int whatFormation = 1;//Mathf.RoundToInt (Random.Range (0, 2.98f) - .49f);
+			int whatFormation = Mathf.RoundToInt (Random.Range (0, 1.98f) - .49f);
 			switch (whatFormation) {
 			case 0:
 				lShooters[i].GetComponent<EnemyShooter> ().speed = new Vector3 (0, -speed, 0);

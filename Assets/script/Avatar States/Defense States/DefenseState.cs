@@ -6,11 +6,13 @@ public class DefenseState {
     protected static int hp;
     protected static int sp;
     protected static bool isInvulnerable = false;
+	protected static GameObject player;
 
-    public void InitializeHpSp(int h, int s)
+	public void InitializeHpSp(int h, int s, GameObject p)
     {
         hp = h;
         sp = s;
+		player = p;
     }
 
     public virtual void UpdateState() { }

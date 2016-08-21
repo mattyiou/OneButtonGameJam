@@ -11,8 +11,9 @@ public class UnshieldedSate : ShieldedState {
         {
             hp = 0;
             AvatarStateManager.defenseState = AvatarStateManager.deadState;
-            Debug.Log("YOU DIED!");
-        }
+            //Debug.Log("YOU DIED!");
+			player.GetComponent<avatarManager>().die();
+		}
     }
 
     public override void PickUp(int h, int s)

@@ -11,6 +11,8 @@ public class avatarManager : MonoBehaviour {
     private Vector2 velocity;
     public float laserDamage = 10f;
     private int heldCount = 0;
+	public GameObject explodeParticle;
+	public GameObject gameOverScreen;
 
     private enum TapState
     {
@@ -29,8 +31,14 @@ public class avatarManager : MonoBehaviour {
         rb = this.GetComponent<Rigidbody2D>();
         velocity = rb.velocity;
         AvatarStateManager.defenseState = AvatarStateManager.shieldedState;
-        AvatarStateManager.unshieldedState.InitializeHpSp(4, 2);
+		AvatarStateManager.unshieldedState.InitializeHpSp(4, 2,this.gameObject);
         //defenseState.EnterState(AvatarStateManager.MAX_HP);
+	}
+
+	public void die() {
+		Instantiate (explodeParticle, this.transform.position, explodeParticle.transform.rotation);
+		gameOverScreen.SetActive (true);
+		Destroy (this.gameObject);
 	}
 	
 	void FixedUpdate () {

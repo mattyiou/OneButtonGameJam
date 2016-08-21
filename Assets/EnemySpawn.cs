@@ -12,14 +12,18 @@ public class EnemySpawn : MonoBehaviour {
 	void Start () {
 		spawnLaserEnemies ();
 	}
-	
+
+	public void restartGame() {
+		Application.LoadLevel (0);
+	}
+
 	// Update is called once per frame
 	void FixedUpdate () {
 		currentTime = currentTime + Time.fixedDeltaTime;
 		if (timePerEnemy < currentTime) {
 			currentTime = 0;
 			int whatToSpawn = Mathf.RoundToInt (Random.Range (0, 2.98f) - .49f);
-			switch (0) {
+			switch (whatToSpawn) {
 			case 0: spawnShooters();
 				break;
 			case 1: spawnLaserEnemies();
