@@ -14,6 +14,8 @@ public class Enemy : MonoBehaviour {
 			hp-=.5f;
 		} else if (col.tag.Equals ("Player")) {
 			GameObject.FindGameObjectWithTag ("Player").GetComponent<avatarManager> ().GetHit (5);
+			Instantiate (explosionParticle, transform.position, explosionParticle.transform.rotation);
+			Destroy (this.gameObject);
 		}
 		if (hp <= 0) {
 			Instantiate (explosionParticle, transform.position, explosionParticle.transform.rotation);

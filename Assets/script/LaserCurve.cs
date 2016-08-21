@@ -23,7 +23,7 @@ public class LaserCurve : MonoBehaviour {
         layerMask = 1 << 8;
         positionArray = new Vector3[vertexCount];
         float deltaY = 10f / vertexCount;
-        float headY = this.transform.position.y-.2f;
+        float headY = this.transform.position.y;
         for (int i = 0; i < vertexCount; i++)
         {
             positionArray[i].y = headY + deltaY * i;

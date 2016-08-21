@@ -3,16 +3,20 @@ using System.Collections;
 
 public class UnshieldedSate : ShieldedState {
 
-    public override void GetHit(int damage)
+	public override void ProccessDamage(int damage)
     {
-        base.GetHit(damage);
-        hp -= damage;
+		base.ProccessDamage(damage);
+		hp -= 1;
+		Debug.Log ("Lost hp");
+        //hp -= damage;
+		UpdateState();
         if (hp <= 0)
         {
             hp = 0;
             AvatarStateManager.defenseState = AvatarStateManager.deadState;
             //Debug.Log("YOU DIED!");
 			player.GetComponent<avatarManager>().die();
+
 		}
     }
 

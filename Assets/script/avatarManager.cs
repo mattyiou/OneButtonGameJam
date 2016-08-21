@@ -13,6 +13,12 @@ public class avatarManager : MonoBehaviour {
     private int heldCount = 0;
 	public GameObject explodeParticle;
 	public GameObject gameOverScreen;
+	public GameObject playerShield;
+
+	public GameObject[] hearts;
+	public GameObject[] shields;
+
+	private float invulTiltTime = 0f;
 
     private enum TapState
     {
@@ -33,6 +39,7 @@ public class avatarManager : MonoBehaviour {
         AvatarStateManager.defenseState = AvatarStateManager.shieldedState;
 		AvatarStateManager.unshieldedState.InitializeHpSp(4, 2,this.gameObject);
         //defenseState.EnterState(AvatarStateManager.MAX_HP);
+
 	}
 
 	public void die() {
@@ -89,7 +96,19 @@ public class avatarManager : MonoBehaviour {
             }
         }
 
-
+		//if its invul, then appear and disappear
+		if (AvatarStateManager.defenseState.getIsInvulnerable ()) {
+			if (Time.time > invulTiltTime + .5f) {
+				invulTiltTime = Time.time;
+				if (GetComponent<SpriteRenderer> ().color.a == 0) {
+					GetComponent<SpriteRenderer> ().color = new Color (1, 1, 1, 1);
+				} else {
+					GetComponent<SpriteRenderer> ().color = new Color (1, 1, 1, 0);
+				}
+			}
+		} else {
+			GetComponent<SpriteRenderer> ().color = new Color(1,1,1,1);
+		}
         
     }
 
@@ -118,4 +137,8 @@ public class avatarManager : MonoBehaviour {
             PickUp(item.hp, item.sp);
         }
     }
+
+	public void ShowHideShield(bool shieldVisibility) {
+		playerShield.SetActive (shieldVisibility);
+	}
 }
