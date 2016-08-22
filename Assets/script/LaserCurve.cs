@@ -12,6 +12,8 @@ public class LaserCurve : MonoBehaviour {
     private int layerMask;
     private Vector3[] positionArray;
     private avatarManager player;
+    public GameObject particleFX;
+    private bool isParticleSpawnable = true;
 
 	// Use this for initialization
 	void Start () {
@@ -56,8 +58,17 @@ public class LaserCurve : MonoBehaviour {
 
         if (currentEndOfLaser < vertexCount)
         {
-            currentEndOfLaser++;
-            positionArray[currentEndOfLaser-1].x = positionArray[currentEndOfLaser - 2].x;
+            currentEndOfLaser += 2;
+            if (currentEndOfLaser > vertexCount)
+            {
+                currentEndOfLaser = vertexCount;
+                positionArray[currentEndOfLaser - 1].x = positionArray[currentEndOfLaser - 2].x;
+            }
+            else
+            {
+                positionArray[currentEndOfLaser - 2].x = positionArray[currentEndOfLaser - 3].x;
+                positionArray[currentEndOfLaser - 1].x = positionArray[currentEndOfLaser - 2].x;
+            }
         }
 	}
 
@@ -82,11 +93,28 @@ public class LaserCurve : MonoBehaviour {
                     {
                         //player.Attack(hit.collider);
                         hit.collider.SendMessage("OnTriggerEnter2D", GetComponent<BoxCollider2D>(), SendMessageOptions.DontRequireReceiver);
+                        SpawnParticles(hit.point);
                         return j + 1;
                     }
                 }
             }
         }
         return vertexCount;
+    }
+
+    void SpawnParticles(Vector3 hitPos)
+    {
+        if (isParticleSpawnable)
+        {
+            isParticleSpawnable = false;
+            StartCoroutine(ParticleTime());
+            Instantiate(particleFX, hitPos, Quaternion.identity);
+        }
+    }
+
+    IEnumerator ParticleTime()
+    {
+        yield return new WaitForSeconds(0.2f);
+        isParticleSpawnable = true;
     }
 }

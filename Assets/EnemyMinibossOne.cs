@@ -85,15 +85,13 @@ public class EnemyMinibossOne : MonoBehaviour {
             i = Random.Range(1, 7);
             if (i >= 3)
             {
-                StartCoroutine(laserPinLeft);
-                StartCoroutine(laserPinRight);
-                yield return new WaitForSeconds(Random.Range(10, 15));
                 endLeftPin = true;
                 endRightPin = true;
-                while (true)
+                StartCoroutine(laserPinLeft);
+                StartCoroutine(laserPinRight);
+                yield return new WaitForSeconds(Random.Range(5, 10));               
+                while (!(leftPinEnded && rightPinEnded))
                 {
-                    if (leftPinEnded && rightPinEnded)
-                        break;
                     yield return new WaitForEndOfFrame();
                 }
             }
@@ -207,8 +205,8 @@ public class EnemyMinibossOne : MonoBehaviour {
         float finalLengthOfLaser = 10f;
         startWidth = 0.2f;
         endWidth = 0.2f;
-        float verticalSpeed = 4f;
-        float laserSpeed = 6f;
+        float verticalSpeed = 8f;
+        float laserSpeed = 10f;
 
         laserOneEnd = laserOneOrigin.transform.position;
         laserTwoEnd = laserTwoOrigin.transform.position;
@@ -367,7 +365,6 @@ public class EnemyMinibossOne : MonoBehaviour {
             laserOne.SetPosition(0, originOne);
             laserOne.SetPosition(1, laserOneEnd);
             laserOne.SetWidth(startWidthOne, startWidthOne);
-            yield return new WaitForSeconds(Random.Range(3, 7));
             // pin left randomly
             pin.x = Random.Range(rangeLow, rangeHigh);
             while ((pin - laserOneEnd).magnitude > Time.deltaTime * 5f)
@@ -423,7 +420,6 @@ public class EnemyMinibossOne : MonoBehaviour {
             laserTwo.SetPosition(0, originTwo);
             laserTwo.SetPosition(1, laserTwoEnd);
             laserTwo.SetWidth(startWidthTwo, startWidthTwo);
-            yield return new WaitForSeconds(Random.Range(3, 7));          
             // pin left randomly
             pin.x = Random.Range(rangeLow, rangeHigh);
             while ((pin - laserTwoEnd).magnitude > Time.deltaTime * 5f)
@@ -497,25 +493,28 @@ public class EnemyMinibossOne : MonoBehaviour {
     {
         float spacingTop = sW / .1f;
         float spacingBot = eW / .1f;
-        float topOffset = sW / 2;
-        float botOffset = eW / 2;
+        float topOffset = sW / spacingTop;
+        float botOffset = eW / spacingBot;
         Vector3 top = start;
         Vector3 bot = end;
-        top.x -= topOffset;
-        bot.x -= botOffset;
+        float endTop = top.x += sW / 2;
+        top.x -= sW/2;
+        bot.x -= eW/2;
 
         RaycastHit2D hit;
 
         for (int i = 0; i < spacingBot; i++)
         {
             hit = Physics2D.Raycast(top, (bot - top), (bot - top).magnitude, playerMask);
+            //Debug.DrawRay(top, (bot - top), Color.green, 1f);
             if (hit.collider != null)
             {
                 hit.collider.GetComponent<avatarManager>().GetHit(2);
                 return true;
             }
-            top.x += spacingTop;
-            bot.x += spacingBot;
+            if (top.x < endTop)
+                top.x += topOffset;
+            bot.x += botOffset;
         }
         return false;
     }

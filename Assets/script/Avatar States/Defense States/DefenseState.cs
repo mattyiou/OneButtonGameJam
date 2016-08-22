@@ -9,7 +9,10 @@ public class DefenseState {
 	protected static GameObject player;
 	protected static GameObject[] hearts;
 	protected static GameObject[] shields;
-
+    protected static int regenStartHP;
+    protected static int regenStartSP;
+    protected static float regenTime = 5f;
+    protected static float currentRegenTime = 0f;
 	public bool getIsInvulnerable() {
 		return isInvulnerable;
 	}
@@ -21,6 +24,7 @@ public class DefenseState {
 		player = p;
 		hearts = GameObject.FindGameObjectsWithTag ("Heart Icon");
 		shields = GameObject.FindGameObjectsWithTag ("Shield Icon");
+        isInvulnerable = false;
     }
 
     public virtual void UpdateState() { 
@@ -30,6 +34,9 @@ public class DefenseState {
 		for (int i = shields.Length-1; i >= 0; i--) {
 			shields [i].SetActive (i < sp);
 		}*/
+
+        
+        
 		for (int i = 0; i < hearts.Length; i++) {
 			hearts [hearts.Length - 1 - i].SetActive (i < hp);
 		}
@@ -39,6 +46,26 @@ public class DefenseState {
 
 		player.GetComponent<avatarManager> ().ShowHideShield (sp > 0);
 	}
+
+    public virtual void UpdateRegen()
+    {
+        if (currentRegenTime == 0f)
+        {
+            regenStartHP = hp;
+            regenStartSP = sp;
+        }
+        currentRegenTime += Time.deltaTime;
+        if (currentRegenTime >= regenTime)
+        {
+            if (regenStartHP == hp && regenStartSP == sp && sp != AvatarStateManager.MAX_SP)
+                sp++;
+            if (sp == 1)
+                AvatarStateManager.defenseState = AvatarStateManager.shieldedState;
+            currentRegenTime = 0f;
+            UpdateState();
+        }
+    }
+
     public virtual void GetHit(int damage)
     {
         if (isInvulnerable)
@@ -73,4 +100,5 @@ public class DefenseState {
         yield return new WaitForSeconds(time);
         isInvulnerable = false;
     }
+
 }
