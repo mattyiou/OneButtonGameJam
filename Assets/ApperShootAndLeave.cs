@@ -23,6 +23,7 @@ public class ApperShootAndLeave : Enemy {
 	void Start () {
         laser = this.GetComponent<LineRenderer>();
 		phase = PHASE_APPEAR;
+        this.hp = 100f;
 		if (place == 0) {
 			place = Random.Range(1,6); //maximum is not included
 		}

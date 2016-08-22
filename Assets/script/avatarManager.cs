@@ -98,7 +98,7 @@ public class avatarManager : MonoBehaviour {
 
 		//if its invul, then appear and disappear
 		if (AvatarStateManager.defenseState.getIsInvulnerable ()) {
-			if (Time.time > invulTiltTime + .5f) {
+			if (Time.time > invulTiltTime + .2f) {
 				invulTiltTime = Time.time;
 				if (GetComponent<SpriteRenderer> ().color.a == 0) {
 					GetComponent<SpriteRenderer> ().color = new Color (1, 1, 1, 1);
