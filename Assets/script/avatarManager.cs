@@ -56,7 +56,7 @@ public class avatarManager : MonoBehaviour {
     void Update()
     {
         //attackState.UpdateState();
-        //defenseState.UpdateState();
+        AvatarStateManager.defenseState.UpdateRegen();
         if (currentForce != 0)
             lastCurrentForce = currentForce;
         if (Input.GetKeyDown(KeyCode.E))

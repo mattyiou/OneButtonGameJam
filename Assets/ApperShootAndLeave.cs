@@ -117,11 +117,11 @@ public class ApperShootAndLeave : Enemy {
     {
         float spacingTop = sW / .1f;
         float spacingBot = eW / .1f;
-        float topOffset = sW / 2;
-        float botOffset = eW / 2;
+        float topOffset = sW / spacingTop;
+        float botOffset = eW / spacingBot;
         Vector3 top = start;
         Vector3 bot = end;
-        top.x -= topOffset;
+        //top.x -= topOffset;
         bot.x -= botOffset;
 
         RaycastHit2D hit;
@@ -129,13 +129,14 @@ public class ApperShootAndLeave : Enemy {
         for (int i = 0; i < spacingBot; i++)
         {
             hit = Physics2D.Raycast(top, (bot - top), (bot - top).magnitude, playerMask);
+            //Debug.DrawRay(top, (bot - top), Color.green, 2f);
             if (hit.collider != null)
             {
-                hit.collider.GetComponent<avatarManager>().GetHit(2);
+                hit.collider.GetComponent<avatarManager>().GetHit(1);
                 return true;
             }
-            top.x += spacingTop;
-            bot.x += spacingBot;
+            //top.x += spacingTop;
+            bot.x += botOffset;
         }
         return false;
     }
