@@ -66,6 +66,7 @@ public class ApperShootAndLeave : Enemy {
 
     IEnumerator FireLaser()
     {
+        this.GetComponent<AudioSource>().Play();
         float finalWidth = 0.45f;
         float curWidth = 0.1f;
         float startWidth = 0.1f;

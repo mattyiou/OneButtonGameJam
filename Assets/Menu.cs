@@ -26,7 +26,7 @@ public class Menu : MonoBehaviour {
 	}
 
 	public void startGame() {
-		Application.LoadLevel (0);
+		Application.LoadLevel (1);
 
 	}
 }

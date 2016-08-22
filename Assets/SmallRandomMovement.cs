@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SmallRandomMovement : MonoBehaviour {
+public class SmallRandomMovement : Enemy {
 
 	public Vector3 center = new Vector3(0,2.5f,0);
 	public float smallVariation = 0.8f;

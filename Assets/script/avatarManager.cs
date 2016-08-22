@@ -59,7 +59,7 @@ public class avatarManager : MonoBehaviour {
         AvatarStateManager.defenseState.UpdateRegen();
         if (currentForce != 0)
             lastCurrentForce = currentForce;
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             //Debug.Log(tapState);
             //Debug.Log(Time.realtimeSinceStartup);
@@ -67,7 +67,7 @@ public class avatarManager : MonoBehaviour {
             currentForce = lastCurrentForce;
             currentForce *= -1;
         }
-        else if (Input.GetKeyUp(KeyCode.E))
+        else if (Input.GetKeyUp(KeyCode.Space))
         {
             if (tapState == TapState.HELD)
                 currentForce = lastCurrentForce;

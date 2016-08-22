@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EnemyMinibossOne : MonoBehaviour {
+public class EnemyMinibossOne : Enemy {
 
     public enum ATTACK_STATES
     {
@@ -39,10 +39,12 @@ public class EnemyMinibossOne : MonoBehaviour {
     private bool endLeftPin = false;
     private bool endRightPin = false;
 
+    private int pincounter = 0;
+
     private int playerMask = 1 << 9;
 
 	// Use this for initialization
-	void Start () {     
+	void Start () {
         randomMovement = RandomMovement();
         attackState = ATTACK_STATES.INACTIVE;
         laserPinRight = PinRightLaser();
@@ -79,21 +81,23 @@ public class EnemyMinibossOne : MonoBehaviour {
     IEnumerator Brain()
     {
         StartCoroutine(randomMovement);
+        endLeftPin = false;
+        endRightPin = false;
         int i;
         while (true)
         {
-            i = Random.Range(1, 7);
+            i = Random.Range(1, 8);
+            //Debug.Log("brain says " + i.ToString());
             if (i >= 3)
             {
-                endLeftPin = true;
-                endRightPin = true;
-                StartCoroutine(laserPinLeft);
-                StartCoroutine(laserPinRight);
-                yield return new WaitForSeconds(Random.Range(5, 10));               
-                while (!(leftPinEnded && rightPinEnded))
+                pincounter = 0;
+                StartCoroutine(PinLeftLaser());
+                StartCoroutine(PinRightLaser());
+                
+                while (pincounter < 2)
                 {
                     yield return new WaitForEndOfFrame();
-                }
+                }                
             }
             else
             {
@@ -111,7 +115,7 @@ public class EnemyMinibossOne : MonoBehaviour {
     IEnumerator BigLaserAttack(bool reposition = false)
     {
         float finalLengthOfLaser = 10f;
-        float finalWidth = 3f;
+        float finalWidth = 2.99f;
         float curLength = 0f;
         startWidth = 0f;
         endWidth = 0f;
@@ -128,7 +132,7 @@ public class EnemyMinibossOne : MonoBehaviour {
         laserTwoEnd = laserTwoOrigin.transform.position;
         float originY = laserOneOrigin.transform.position.y;
         bool initLaser = false;
-
+        bool playedaudio = false;
         while (curLength < finalLengthOfLaser)
         {
             if (reposition && (bigLaserPos - this.transform.position).magnitude >= (speed * Time.deltaTime))
@@ -140,6 +144,11 @@ public class EnemyMinibossOne : MonoBehaviour {
             }
             else
             {
+                if (!playedaudio)
+                {
+                    this.GetComponent<AudioSource>().Play();
+                    playedaudio = true;
+                }
                 if (curLength < finalLengthOfLaser)
                 {
                     if (!initLaser)
@@ -156,7 +165,7 @@ public class EnemyMinibossOne : MonoBehaviour {
                     laserTwoEnd.y = originY - curLength;
                     laserOne.SetPosition(1, laserOneEnd);
                     laserTwo.SetPosition(1, laserTwoEnd);
-                    startWidth = curLength / 10;
+                    startWidth = curLength / 20;
                     laserOne.SetWidth(startWidth, startWidth);
                     laserTwo.SetWidth(startWidth, startWidth);
                     if (!BigLaserRaycast(originOne, laserOneEnd, startWidth, startWidth))
@@ -166,16 +175,16 @@ public class EnemyMinibossOne : MonoBehaviour {
             }
             yield return new WaitForEndOfFrame();
         }
-
+        curTime = curTime / 2;
         while (endWidth < finalWidth)
         {
 
             curLength = Mathf.Exp(curTime + timeOffset) - lenOffset;
             endWidth = curLength / 10;
-            laserOne.SetWidth(startWidth, endWidth);
-            laserTwo.SetWidth(startWidth, endWidth);
-            if (!BigLaserRaycast(originOne, laserOneEnd, startWidth, endWidth))
-                BigLaserRaycast(originTwo, laserTwoEnd, startWidth, endWidth);
+            laserOne.SetWidth(endWidth, endWidth);
+            laserTwo.SetWidth(endWidth, endWidth);
+            if (!BigLaserRaycast(originOne, laserOneEnd, endWidth, endWidth))
+                BigLaserRaycast(originTwo, laserTwoEnd, endWidth, endWidth);
             curTime += Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
@@ -193,11 +202,13 @@ public class EnemyMinibossOne : MonoBehaviour {
                 startWidth = 0f;
             if (endWidth < 0)
                 endWidth = 0f;
-            laserOne.SetWidth(startWidth, endWidth);
-            laserTwo.SetWidth(startWidth, endWidth);
+            laserOne.SetWidth(endWidth, endWidth);
+            laserTwo.SetWidth(endWidth, endWidth);
             curTime += Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
+        laserOne.SetVertexCount(0);
+        laserTwo.SetVertexCount(0);
     }
 
     IEnumerator LaserSwipeOutwars()
@@ -205,7 +216,7 @@ public class EnemyMinibossOne : MonoBehaviour {
         float finalLengthOfLaser = 10f;
         startWidth = 0.2f;
         endWidth = 0.2f;
-        float verticalSpeed = 8f;
+        float verticalSpeed = 6f;
         float laserSpeed = 10f;
 
         laserOneEnd = laserOneOrigin.transform.position;
@@ -222,7 +233,7 @@ public class EnemyMinibossOne : MonoBehaviour {
 
         laserOne.SetWidth(startWidth, endWidth);
         laserTwo.SetWidth(startWidth, endWidth);
-
+        this.GetComponent<AudioSource>().Play();
         while (laserTwoEnd.y > originTwo.y - finalLengthOfLaser)
         {
             laserTwoEnd.y -= Time.deltaTime * verticalSpeed;
@@ -248,7 +259,7 @@ public class EnemyMinibossOne : MonoBehaviour {
             yield return new WaitForEndOfFrame();
         }
         laserTwo.SetVertexCount(0);
-
+        this.GetComponent<AudioSource>().Play();
         while (laserOneEnd.y > originOne.y - finalLengthOfLaser)
         {
             laserOneEnd.y -= Time.deltaTime * verticalSpeed;
@@ -291,7 +302,7 @@ public class EnemyMinibossOne : MonoBehaviour {
         startWidth = 0.2f;
         laserOne.SetWidth(startWidth, endWidth);
         laserTwo.SetWidth(startWidth, endWidth);
-
+        this.GetComponent<AudioSource>().Play();
         while (laserTwoEnd.y > originTwo.y - finalLengthOfLaser)
         {
             laserTwoEnd.y -= Time.deltaTime * verticalSpeed;
@@ -317,7 +328,7 @@ public class EnemyMinibossOne : MonoBehaviour {
             yield return new WaitForEndOfFrame();
         }
         laserTwo.SetVertexCount(0);
-
+        this.GetComponent<AudioSource>().Play();
         while (laserOneEnd.y > originOne.y - finalLengthOfLaser)
         {
             laserOneEnd.y -= Time.deltaTime * verticalSpeed;
@@ -354,11 +365,10 @@ public class EnemyMinibossOne : MonoBehaviour {
         float rangeLow = -2.5f;
         float rangeHigh = 2.5f;
 
-        endLeftPin = false;
-        leftPinEnded = false;
-
-        while (!endLeftPin)
-        {
+        //endLeftPin = false;
+       // while (!endLeftPin)
+        //{
+        this.GetComponent<AudioSource>().Play();
             laserOneEnd = originOne;
             float startWidthOne = 0.13f;
             laserOne.SetVertexCount(2);
@@ -378,7 +388,7 @@ public class EnemyMinibossOne : MonoBehaviour {
             }
             laserOneEnd = pin;
             // wait x time
-            float waitTime = Random.Range(3, 6);
+            float waitTime = Random.Range(2, 7.1f);
             while (waitTime > 0)
             {
                 waitTime -= Time.deltaTime;
@@ -398,8 +408,8 @@ public class EnemyMinibossOne : MonoBehaviour {
                 laserOne.SetWidth(startWidthOne, startWidthOne);
                 yield return new WaitForEndOfFrame();
             }
-        }
-        leftPinEnded = true;
+        //}
+            pincounter++;
     }
 
     IEnumerator PinRightLaser()
@@ -409,11 +419,10 @@ public class EnemyMinibossOne : MonoBehaviour {
         float rangeLow = -2.5f;
         float rangeHigh = 2.5f;
         laserTwoEnd = originTwo;
-
-        endRightPin = false;
-        rightPinEnded = false;
-        while (!endRightPin)
-        {
+        //endRightPin = false;
+        //while (!endRightPin)
+       // {
+        this.GetComponent<AudioSource>().Play();
             laserTwoEnd = originTwo;
             float startWidthTwo = 0.13f;
             laserTwo.SetVertexCount(2);
@@ -433,7 +442,7 @@ public class EnemyMinibossOne : MonoBehaviour {
             }
             laserTwoEnd = pin;
             // wait x time
-            float waitTime = Random.Range(3, 6);
+            float waitTime = Random.Range(2, 7.1f);
             while (waitTime >= 0)
             {
                 waitTime -= Time.deltaTime;
@@ -453,8 +462,8 @@ public class EnemyMinibossOne : MonoBehaviour {
                 laserTwo.SetWidth(startWidthTwo, startWidthTwo);
                 yield return new WaitForEndOfFrame();
             }
-        }
-        rightPinEnded = true;
+       // }
+            pincounter++;
     }
 
     IEnumerator RandomMovement()
